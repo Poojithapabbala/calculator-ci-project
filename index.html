@@ -1,0 +1,769 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalcSpace | Smart Calculator</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg: #f3f5ff;
+    --card: #ffffff;
+    --text: #202442;
+    --muted: #858ba6;
+    --primary: #6758e8;
+    --primary-light: #eeecff;
+    --border: #ececf5;
+    --button: #f4f4fa;
+    --shadow: 0 20px 60px rgba(51, 48, 110, .10);
+}
+
+body.dark {
+    --bg: #111426;
+    --card: #1c2036;
+    --text: #f5f5ff;
+    --muted: #a0a5bf;
+    --primary: #9b8cff;
+    --primary-light: #302b50;
+    --border: #333650;
+    --button: #292e47;
+    --shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 10% 10%, #dcd8ff 0, transparent 30%),
+        radial-gradient(circle at 90% 85%, #d4e8ff 0, transparent 30%),
+        var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    transition: .3s;
+}
+
+body.dark {
+    background:
+        radial-gradient(circle at 10% 10%, #302650 0, transparent 35%),
+        radial-gradient(circle at 90% 85%, #182c4b 0, transparent 35%),
+        var(--bg);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 7%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.logo-icon {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 24px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #8173ff, #5545d7);
+    box-shadow: 0 6px 18px #6758e855;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.header-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.status {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 10px 15px;
+    border-radius: 30px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.status i {
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    background: #25c78a;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.theme-btn {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+main {
+    max-width: 1100px;
+    margin: 35px auto 60px;
+    padding: 0 20px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 38px;
+}
+
+.eyebrow {
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 17px;
+}
+
+.hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+}
+
+.hero h1 span {
+    background: linear-gradient(100deg, #8b79ff, #4e9cf5);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(250px, .8fr);
+    gap: 24px;
+    align-items: stretch;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+}
+
+.calculator {
+    padding: 27px;
+}
+
+.card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.card-heading h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+}
+
+.small-tag {
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.display {
+    background: linear-gradient(135deg, #242044, #37305e);
+    border-radius: 19px;
+    padding: 24px;
+    color: white;
+    margin-bottom: 20px;
+    min-height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.display-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #aaa5cf;
+}
+
+.expression {
+    color: #c0b9e9;
+    text-align: right;
+    font-size: 15px;
+    min-height: 23px;
+    overflow-wrap: anywhere;
+}
+
+.result {
+    text-align: right;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(32px, 6vw, 45px);
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 11px;
+}
+
+.key {
+    border: none;
+    min-height: 58px;
+    border-radius: 14px;
+    background: var(--button);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.key:hover {
+    transform: translateY(-2px);
+    filter: brightness(.96);
+}
+
+.key:active {
+    transform: scale(.95);
+}
+
+.key.function {
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.key.operator {
+    color: var(--primary);
+    font-size: 22px;
+}
+
+.key.equals {
+    color: white;
+    background: linear-gradient(135deg, #8172ff, #5847d8);
+    box-shadow: 0 7px 16px #6758e844;
+}
+
+.key.zero {
+    grid-column: span 2;
+}
+
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-card {
+    padding: 24px;
+}
+
+.info-card h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    margin-bottom: 17px;
+}
+
+.history-list {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+
+.history-item span:first-child {
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.history-item span:last-child {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.empty {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.clear-history {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.feature {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+    margin: 18px 0;
+}
+
+.feature-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 11px;
+    font-size: 17px;
+}
+
+.feature h4 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.feature p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    padding: 30px 15px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+footer strong {
+    color: var(--primary);
+}
+
+.footer-line {
+    width: 55px;
+    height: 3px;
+    border-radius: 5px;
+    background: var(--primary);
+    margin: 0 auto 15px;
+}
+
+@media(max-width: 760px) {
+    header {
+        padding: 18px 5%;
+    }
+
+    .status {
+        display: none;
+    }
+
+    main {
+        margin-top: 20px;
+    }
+
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .calculator {
+        padding: 19px;
+    }
+
+    .key {
+        min-height: 56px;
+    }
+
+    .hero {
+        margin-bottom: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <div class="logo-icon">÷</div>
+        Calc<span>Space</span>
+    </div>
+
+    <div class="header-right">
+        <div class="status">
+            <i></i> CI/CD Project
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">☾</button>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="eyebrow">✦ SMART CALCULATION EXPERIENCE</div>
+        <h1>Calculate with <span>Confidence.</span></h1>
+        <p>A simple, powerful and elegant calculator designed<br>
+        to make everyday calculations effortless.</p>
+    </section>
+
+    <section class="workspace">
+
+        <div class="card calculator">
+
+            <div class="card-heading">
+                <h2>Calculator</h2>
+                <div class="small-tag">STANDARD MODE</div>
+            </div>
+
+            <div class="display">
+                <div class="display-label">YOUR CALCULATION</div>
+                <div class="expression" id="expression">Ready to calculate</div>
+                <div class="result" id="result">0</div>
+            </div>
+
+            <div class="keypad">
+                <button class="key function" onclick="clearAll()">AC</button>
+                <button class="key function" onclick="toggleSign()">+/-</button>
+                <button class="key function" onclick="percentage()">%</button>
+                <button class="key operator" onclick="chooseOperator('/')">÷</button>
+
+                <button class="key" onclick="appendNumber('7')">7</button>
+                <button class="key" onclick="appendNumber('8')">8</button>
+                <button class="key" onclick="appendNumber('9')">9</button>
+                <button class="key operator" onclick="chooseOperator('*')">×</button>
+
+                <button class="key" onclick="appendNumber('4')">4</button>
+                <button class="key" onclick="appendNumber('5')">5</button>
+                <button class="key" onclick="appendNumber('6')">6</button>
+                <button class="key operator" onclick="chooseOperator('-')">−</button>
+
+                <button class="key" onclick="appendNumber('1')">1</button>
+                <button class="key" onclick="appendNumber('2')">2</button>
+                <button class="key" onclick="appendNumber('3')">3</button>
+                <button class="key operator" onclick="chooseOperator('+')">+</button>
+
+                <button class="key zero" onclick="appendNumber('0')">0</button>
+                <button class="key" onclick="appendDecimal()">.</button>
+                <button class="key equals" onclick="calculate()">=</button>
+            </div>
+
+        </div>
+
+        <div class="side-panel">
+
+            <div class="card info-card">
+                <div class="card-heading">
+                    <h3>Recent History</h3>
+                    <div class="small-tag">ACTIVITY</div>
+                </div>
+
+                <div class="history-list" id="history">
+                    <div class="empty">Your calculations will appear here.</div>
+                </div>
+
+                <button class="clear-history" onclick="clearHistory()">
+                    Clear History
+                </button>
+            </div>
+
+            <div class="card info-card">
+                <h3>Why CalcSpace?</h3>
+
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div>
+                        <h4>Fast Calculations</h4>
+                        <p>Perform mathematical operations instantly.</p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">◈</div>
+                    <div>
+                        <h4>Simple Interface</h4>
+                        <p>Enjoy a clean and easy-to-use experience.</p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    <div>
+                        <h4>Reliable Results</h4>
+                        <p>Accurate results with division-by-zero handling.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-line"></div>
+    <p><strong>CalcSpace</strong> · Calculator CI/CD Demonstration</p>
+    <p style="margin-top:8px">
+        Developed as a DevOps project using HTML, CSS, JavaScript and GitHub Actions.
+    </p>
+    <p style="margin-top:12px">© 2026 CalcSpace. All rights reserved.</p>
+</footer>
+
+<script>
+let current = "0";
+let previous = null;
+let operator = null;
+let shouldReset = false;
+let history = [];
+
+const resultDisplay = document.getElementById("result");
+const expressionDisplay = document.getElementById("expression");
+
+function updateDisplay() {
+    resultDisplay.textContent = current;
+}
+
+function appendNumber(number) {
+    if (current === "Error") clearAll();
+
+    if (shouldReset) {
+        current = number;
+        shouldReset = false;
+    } else {
+        current = current === "0" ? number : current + number;
+    }
+
+    updateDisplay();
+}
+
+function appendDecimal() {
+    if (shouldReset || current === "Error") {
+        current = "0.";
+        shouldReset = false;
+    } else if (!current.includes(".")) {
+        current += ".";
+    }
+
+    updateDisplay();
+}
+
+function chooseOperator(op) {
+    if (current === "Error") return;
+
+    if (operator && !shouldReset) {
+        calculate(false);
+    }
+
+    previous = parseFloat(current);
+    operator = op;
+    shouldReset = true;
+
+    const symbols = {"+":"+","-":"−","*":"×","/":"÷"};
+
+    expressionDisplay.textContent =
+        previous + " " + symbols[op];
+
+}
+
+function calculate(save = true) {
+    if (operator === null || previous === null) return;
+
+    let a = previous;
+    let b = parseFloat(current);
+    let answer;
+
+    if (operator === "+") answer = a + b;
+    if (operator === "-") answer = a - b;
+    if (operator === "*") answer = a * b;
+
+    if (operator === "/") {
+        if (b === 0) {
+            current = "Error";
+            resultDisplay.textContent = current;
+            expressionDisplay.textContent = "Cannot divide by zero";
+            previous = null;
+            operator = null;
+            shouldReset = true;
+            return;
+        }
+        answer = a / b;
+    }
+
+    let symbols = {"+":"+","-":"−","*":"×","/":"÷"};
+
+    const expression =
+        a + " " + symbols[operator] + " " + b;
+
+    if (!Number.isFinite(answer)) {
+        current = "Error";
+        updateDisplay();
+        return;
+    }
+
+    let formatted = Number(answer.toPrecision(12)).toString();
+
+    expressionDisplay.textContent = expression + " =";
+    current = formatted;
+
+    if (save) {
+        addHistory(expression, formatted);
+    }
+
+    previous = null;
+    operator = null;
+    shouldReset = true;
+    updateDisplay();
+}
+
+function clearAll() {
+    current = "0";
+    previous = null;
+    operator = null;
+    shouldReset = false;
+
+    expressionDisplay.textContent = "Ready to calculate";
+    updateDisplay();
+}
+
+function toggleSign() {
+    if (current === "0" || current === "Error") return;
+
+    current = current.startsWith("-")
+        ? current.slice(1)
+        : "-" + current;
+
+    updateDisplay();
+}
+
+function percentage() {
+    if (current === "Error") return;
+
+    current = String(parseFloat(current) / 100);
+    expressionDisplay.textContent = "Percentage";
+    updateDisplay();
+}
+
+function addHistory(expression, answer) {
+    history.unshift({expression, answer});
+
+    if (history.length > 8) history.pop();
+
+    renderHistory();
+}
+
+function renderHistory() {
+    const container = document.getElementById("history");
+
+    if (history.length === 0) {
+        container.innerHTML =
+            '<div class="empty">Your calculations will appear here.</div>';
+        return;
+    }
+
+    container.innerHTML = "";
+
+    history.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "history-item";
+
+        const exp = document.createElement("span");
+        exp.textContent = item.expression;
+
+        const ans = document.createElement("span");
+        ans.textContent = item.answer;
+
+        row.appendChild(exp);
+        row.appendChild(ans);
+        container.appendChild(row);
+    });
+}
+
+function clearHistory() {
+    history = [];
+    renderHistory();
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+
+    document.getElementById("themeBtn").textContent =
+        document.body.classList.contains("dark") ? "☀" : "☾";
+}
+
+// Keyboard support
+document.addEventListener("keydown", function(event) {
+    const key = event.key;
+
+    if (key >= "0" && key <= "9") {
+        appendNumber(key);
+    } else if (key === ".") {
+        appendDecimal();
+    } else if (["+", "-", "*", "/"].includes(key)) {
+        chooseOperator(key);
+    } else if (key === "Enter" || key === "=") {
+        event.preventDefault();
+        calculate();
+    } else if (key === "Backspace") {
+        if (current.length > 1 && !shouldReset) {
+            current = current.slice(0, -1);
+        } else {
+            current = "0";
+        }
+        updateDisplay();
+    } else if (key === "Escape") {
+        clearAll();
+    } else if (key === "%") {
+        percentage();
+    }
+});
+</script>
+
+</body>
+</html>
